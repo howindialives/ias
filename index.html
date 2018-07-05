@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bureaucracy Transfer Report</title>
+</head>
+<style type="text/css">
+html,body{
+    text-align: center;
+}
+.blue_box{
+    width:15px;
+    height: 15px;
+    background: blue;
+    display: inline-block;
+}
+.orange_box{
+    width: 15px;
+    height: 15px;
+    background: orange;
+    display: inline-block;
+}
+.orange_text{
+    display: inline-block;
+}
+.blue_text{
+    display: inline-block;
+}
+.blue_zone{
+    display: inline-block;
+margin: 5px;
+}
+.orange_zone{
+display: inline-block;
+margin: 5px;
+}
+    /* Format X and Y Axis */
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+    }
+
+    .axis text {
+        font-family: sans-serif;
+        font-size: 11px;
+    }
+</style>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<body>
+    <h2>D3 Scatterplot </h2>
+    <p>This is a data visualization using transitions with a scatterplot</p>
+    <h4>Click on this text to update chart with new values</h4>
+    <h3></h3>
+    <select id="state_sel" onChange="onStateChange(this)">
+        <option value="Punjab">Punjab</option>
+        <option value="Himachal Pradesh">Himachal Pradesh</option>
+        <option value="A G M U T">AGMUT</option>
+        <option value="Maharashtra">Maharashtra</option>
+        <option value="Bihar">Bihar</option>
+        <option value="Kerala">Kerala</option>
+        <option value="Tamil Nadu">Tamil Nadu</option>
+        <option value="Gujarat">Gujarat</option>
+        <option value="Uttar Pradesh">Uttar Pradesh</option>
+        <option value="West Bengal">West Bengal</option>
+        <option value="Uttarakhand">Uttarakhand</option>
+      </select>
+      <select id="pivot_sel" onChange="onPivotChange(this)">
+        <option value="abc">No Filter</option>
+        <option value="nativity">Native</option>
+        <option value="gender">Gender</option>
+        <option value="designation">Designation</option>
+      </select>
+      <div id="chart"></div>
+      <div class="pseudo_legend">
+          <div class="blue_zone">
+              <div class="blue_box">
+
+              </div>
+              <div id="blue" class="blue_text">
+                Blue Text
+              </div>
+          </div>
+          <div class="orange_zone">
+                <div class="orange_box">
+  
+                </div>
+                <div id="orange" class="orange_text">
+                    Orange Text
+                </div>
+            </div>
+      </div>
+
+</body>
+<script src="main.js"></script>
+</html>

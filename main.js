@@ -1,6 +1,7 @@
 // Setup data
 var dataset = [];  // Initialize empty array
 document.getElementsByClassName("pseudo_legend")[0].style.visibility="hidden";
+document.getElementsByClassName("overall")[0].style.display="block";
 function onStateChange(selected){
     
     executec(selected.value,document.getElementById("pivot_sel").value)
@@ -8,8 +9,10 @@ function onStateChange(selected){
 function onPivotChange(selected){
   
   document.getElementsByClassName("pseudo_legend")[0].style.visibility="visible";
+  document.getElementsByClassName("overall")[0].style.display="none";
   switch(selected.value){
     case("gender"):
+
       document.getElementById("blue").innerHTML="Male"
       document.getElementById("orange").innerHTML="Female"
       break
@@ -23,6 +26,7 @@ function onPivotChange(selected){
       break
     case("abc"):
       document.getElementsByClassName("pseudo_legend")[0].style.visibility="hidden";
+      document.getElementsByClassName("overall")[0].style.display="block";
   }
   executec(document.getElementById("state_sel").value,selected.value)
 }
@@ -160,13 +164,12 @@ function plotData(data){
     .attr("cx", function(d) { return x(d.date); })
     .attr("cy", function(d) { return y(d.time); })
     .attr("opacity", 0.5)
-    .attr("data-legend",function(d) { return d.pivot})
     .style("fill", function(d) { return colour(d.pivot); })
     .on("mouseover", function(d) {
            tooltip.transition()
              .duration(200)
              .style("opacity", .9);
-           tooltip.html(formatDate(d.date) + " " + formatTime(d.time) + "<br/>" + d.pivot)
+           tooltip.html(d.name + " transfered on " +formatDate(d.date)+" after "+d.time+" days.")
              .style("left", (d3.event.pageX) + "px")
              .style("top", (d3.event.pageY - 28) + "px");
                 
@@ -192,7 +195,8 @@ return
 function executec(state,pivot){
     
     fullData=dataset.filter(v=>v.cadre==state);
-fullData.forEach(d=>{
+for(var i=0;i<fullData.length;i++){
+  d=fullData[i]
     d.date = new Date(d.V7);
     d.time=d.V6;
     switch(pivot){
@@ -208,17 +212,38 @@ fullData.forEach(d=>{
       case("gender"):
         d.pivot=d[pivot]
         break
-    }
-    
-})
-
+    }   
+}
+function avg_dur(arr){
+  console.log(arr)
+  let len_items=arr.length;
+  let summ=arr.reduce(function (acc, obj) { return acc + parseInt(obj.time)||0; }, 0); // 7
+  return "("+Math.floor(summ/len_items)+" days)";
+}
+switch(pivot){
+  case("gender"):
+    document.getElementById("blueper").innerHTML=avg_dur(fullData.filter(v=>v.pivot=="Male" & v.time>0))
+    document.getElementById("orangeper").innerHTML=avg_dur(fullData.filter(v=>v.pivot=="Female" & v.time>0))
+    break
+  case("designation"):
+    document.getElementById("blueper").innerHTML=avg_dur(fullData.filter(v=>v.pivot=="Senior" & v.time>0))
+    document.getElementById("orangeper").innerHTML=avg_dur(fullData.filter(v=>v.pivot=="Junior" & v.time>0))
+    break
+  case("nativity"):
+    document.getElementById("blueper").innerHTML=avg_dur(fullData.filter(v=>v.pivot=="Non Native" & v.time>0))
+    document.getElementById("orangeper").innerHTML=avg_dur(fullData.filter(v=>v.pivot=="Native" & v.time>0))
+    break
+  case("abc"):
+    document.getElementById("overa").innerHTML=avg_dur(fullData.filter(v=>v.time>0))
+    break
+}
 colour = d3.scaleOrdinal()
 .domain(d3.map(fullData, function(d){return d.pivot;}).keys())
 .range(d3.schemeCategory10);
-
-
 plotData(fullData);
 }
+
+
 fetch("front2.json").then(function(res){
     return res.json()
 }).then(function(resp){
